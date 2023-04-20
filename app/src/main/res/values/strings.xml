@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Proyecto</string>
+    <string name="et_nombre">Introduce tu nombre</string>
+    <string name="txt_view">creada por Juanca y Luis</string>
+    <string name="btn_jugar">JUGAR</string>
+    <string name="txt_usuario">Jugador:</string>
+    <string name="txt_Score">Score:</string>
+    <string name="txt_vida">Coches:</string>
+    <string name="txt_UsuarioNombre">Usuario</string>
+    <string name="txt_puntuaje">0</string>
+    <string name="txt_oportunidades">3</string>
 </resources>
