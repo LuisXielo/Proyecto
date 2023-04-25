@@ -2,6 +2,7 @@ package com.example.proyecto;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,6 +23,7 @@ public class MainActivityNivel1 extends AppCompatActivity {
 
     int score, numAleatorio_uno, numAleatorio_dos, resultado, vidas = 3;
     String nombre_jugador, string_score, string_vidas;
+    String NombreBaseDatos = "administracion";
 
     String numero [] = {"cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve"};
 
@@ -48,9 +50,11 @@ public class MainActivityNivel1 extends AppCompatActivity {
             if (resultado == respuesta_jugador){
                 score++;
                 tv_score.setText("Score: "+ score);
+                BaseDatos();
             }else {
                 //musica cuando la tengamos
                 vidas--;
+                BaseDatos();
 
                 switch (vidas){
                     case 3:
@@ -119,9 +123,33 @@ public class MainActivityNivel1 extends AppCompatActivity {
     }
 
     public void BaseDatos(){
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "BaseDeDatos", null, 1);
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, NombreBaseDatos, null, 1);
         SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
 
         Cursor consulta = BaseDeDatos.rawQuery("select * from lista  where puntuacion = (select max(puntuacion) from lista)", null);
+
+        if (consulta.moveToFirst()){
+            String tem_nombre = consulta.getString(0);
+            String tem_score = consulta.getString(1);
+
+            int bestScore = Integer.parseInt(tem_score);
+
+            if (score > bestScore){
+                ContentValues modificacion = new ContentValues();
+                modificacion.put("nombre", nombre_jugador);
+                modificacion.put("puntuacion ", score);
+
+                BaseDeDatos.update("lista", modificacion, "puntuacion=" + bestScore, null);
+            }
+            BaseDeDatos.close();
+
+        }else {
+            ContentValues insertar = new ContentValues();
+
+            insertar.put("nombre", nombre_jugador);
+            insertar.put("puntuacion", score);
+
+            BaseDeDatos.insert("lista", null, insertar);
+        }
     }
 }
