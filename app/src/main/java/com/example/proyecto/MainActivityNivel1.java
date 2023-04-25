@@ -3,14 +3,18 @@ package com.example.proyecto;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivityNivel1 extends AppCompatActivity {
-
     private TextView tv_nombre, tv_score;
     private ImageView iv_Auno, iv_Ados, iv_vidas;
     private EditText et_respuesta;
@@ -31,8 +35,48 @@ public class MainActivityNivel1 extends AppCompatActivity {
         et_respuesta = findViewById(R.id.et_numero);
 
         String texto = getIntent().getStringExtra("texto");
-        tv_nombre.setText(texto);
+        tv_nombre.setText("Jugador: " + texto);
 
+    }
+
+    public void comprobar (View view){
+        String respuesta = et_respuesta.getText().toString();
+
+        if (!respuesta.equals("")){
+            //musica cuando se tenga
+            int respuesta_jugador = Integer.parseInt(respuesta);
+            if (resultado == respuesta_jugador){
+                score++;
+                tv_score.setText("Score: "+ score);
+            }else {
+                //musica cuando la tengamos
+                vidas--;
+
+                switch (vidas){
+                    case 3:
+                        // iv_vidas.setImageResoucer(R.drawable."nombre de la foto de 3 vida");
+                        break;
+                    case 2:
+                        Toast.makeText(this, "te quedan dos coches", Toast.LENGTH_SHORT).show();
+                        // iv_vidas.setImageResoucer(R.drawable."nombre de la foto de 2 vida");
+                        break;
+                    case 1:
+                        Toast.makeText(this, "Te queda un coche", Toast.LENGTH_SHORT).show();
+                        // iv_vidas.setImageResoucer(R.drawable."nombre de la foto de 1 vida");
+                        break;
+                    case 0:
+                        Toast.makeText(this, "Has perdido", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        // mp.stop();
+                        // mp.release();
+                        break;
+                }
+                tv_score.setText(score);
+            }
+            NumAleatorio();
+        }
     }
 
     public void NumAleatorio(){
@@ -69,8 +113,15 @@ public class MainActivityNivel1 extends AppCompatActivity {
 
             startActivity(intent);
             finish();
-            mp.stop();
-            mp.release();
+            // parar musica mp.stop();
+            // mp.release();
         }
+    }
+
+    public void BaseDatos(){
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "BaseDeDatos", null, 1);
+        SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
+
+        Cursor consulta = BaseDeDatos.rawQuery("select * from lista  where puntuacion = (select max(puntuacion) from lista)", null);
     }
 }

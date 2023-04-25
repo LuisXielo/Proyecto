@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -30,13 +31,15 @@ public class MainActivity extends AppCompatActivity {
     public void Jugar (View view){
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, NombreBaseDatos, null,1);
         SQLiteDatabase BaseDeDatos = admin.getWritableDatabase();
+
+        Cursor consulta = BaseDeDatos.rawQuery("select * from lista where puntuacion = (select max(puntuacion) from lista)", null);
         String nombre = et_nombre.getText().toString();
 
         if(!nombre.isEmpty()){
             ContentValues registro = new ContentValues();
             registro.put("nombre", nombre);
 
-            BaseDeDatos.insert("Lista", null, registro);
+            BaseDeDatos.insert("lista", null, registro);
 
             BaseDeDatos.close();
             String texto = nombre;

@@ -84,6 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="364dp"
+        android:onClick="comprobar"
         android:text="@string/btn_comprobar"
         app:layout_constraintStart_toEndOf="@+id/et_numero"
         app:layout_constraintTop_toTopOf="parent" />
